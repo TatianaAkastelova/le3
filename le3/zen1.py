@@ -1,18 +1,14 @@
 import sys
 import this
 
-from random import choice
-
-from django.conf import settings
 from django.core.management import execute_from_command_line
-from django.http import HttpResponse
+from django.http import HttpResponseNotFound, HttpResponse
 from django.urls import path
 
 
-
-ROOT_URLCONF=__name__
-DEBUG=True
-SECRET_KEY='secret'
+ROOT_URLCONF = __name__
+DEBUG = True
+SECRET_KEY = 'secret'
 
 
 text = ''.join(this.d.get(c, c) for c in this.s)
@@ -32,12 +28,15 @@ template = """
 """
 
 
-def hello(request):
-    return HttpResponse(template.format(title=title, quote=choice(quotes)))
+def handler(request, index):
+    if index < len(quotes):
+        return HttpResponse(quotes[index])
+    else:
+        return HttpResponseNotFound(f'Quote {index} is not found')
 
 
 urlpatterns = [
-    path('', hello)
+    path('quote/<int:index>', handler),
 ]
 
 
