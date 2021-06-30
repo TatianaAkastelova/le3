@@ -1,4 +1,3 @@
-import django
 import sys
 import this
 
